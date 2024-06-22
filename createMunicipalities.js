@@ -106,9 +106,11 @@ function createMunicipalities() {
         const name = parts.slice(1, -4).join(' ');
         return { name };
     });
+    const dateNow = Date.now();
+    const dateObject = new Date(dateNow);
+    const fileSafeDate = dateObject.toISOString().replace(/:/g, '-').replace(/\.\d{3}Z$/, '');
 
-    // Save the array to a JSON file
-    fse.writeJson('municipalities.json', municipalities, { spaces: 2 })
+    fse.writeJson(`municipalities - ${fileSafeDate}.json`, municipalities, { spaces: 2 })
       .then(() => {
           console.log('Municipalities successfully saved in municipalities.json');
       })
