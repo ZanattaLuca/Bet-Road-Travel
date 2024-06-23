@@ -8,6 +8,7 @@ const readline = require('readline');
 
 //My modules
 const createMunicipalities = require('./createMunicipalities')
+const loadData = require('./utils')
 
 const app = express();
 
@@ -19,12 +20,20 @@ const rl = readline.createInterface({
 function promptInput() {
     console.log('[1] - Press [1] to generate the json of the municipalities starting from the string');
     console.log('[0] - Press [0] to exit');
-    rl.question('Please enter your choice: ', (answer) => {
+    rl.question('', (answer) => {
         switch (answer) {
             case "1":
-                console.log("You have selected option 1.");
-                createMunicipalities();
-                promptInput();
+                rl.question('Enter the file path for municipalities data: ', (filepath) => {
+                    loadData(filepath)
+                        .then(data => {
+                            console.log('Data loaded successfully.');
+                            createMunicipalities(data);
+                        })
+                        .catch(err => {
+                            console.error('Failed to load data:', err);
+                        });
+                    promptInput();
+                });
                 break;
             case "0":
                 console.log("Exiting application...");
